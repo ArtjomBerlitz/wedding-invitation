@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Дарья & Артем</title>
+
+  <style>
+    @font-face {
+      font-family: "Patriciana";
+      src: url("./fonts/patriciana.woff2") format("woff2");
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Vetrino";
+      src: url("./fonts/Vetrino.woff2") format("woff2");
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "TildaSans-R";
+      src: url("./fonts/TildaSans-VF.woff2") format("woff2");
+      font-display: swap;
+    }
+
+     @font-face {
+      font-family: "Betmo";
+      src: url("fonts/Betmo.otf") format("opentype");
+      font-display: swap;
+    }
+
+    :root{
+      --text:#111111;
+      --muted:#72665d;
+      --line:#e7e2dd;
+      --soft:#f8f6f3;
+      --warm:#f5f1eb;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      margin:0;
+      background:#ffffff;
+      color:var(--text);
+      font-family:"TildaSans-R","Inter",system-ui,-apple-system,sans-serif;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    .page{
+      width:100%;
+      overflow-x:hidden;
+    }
+
+    .section{
+      max-width:920px;
+      margin:0 auto;
+      padding:56px 20px;
+      opacity:0;
+      transform:translateY(24px);
+      transition:opacity .9s ease, transform .9s ease;
+      text-align:center;
+    }
+
+    .section.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .section-narrow{
+      max-width:760px;
+    }
+
+    .title{
+      font-family:"Patriciana","Times New Roman",serif;
+      font-weight:700;
+      letter-spacing:.01em;
+      line-height:.92;
+      margin:0;
+      margin-bottom:14px;
+    }
+
+    .title--large{
+      font-size:clamp(44px, 8vw, 74px);
+    }
+
+    .title--medium{
+      font-size:clamp(28px, 4.6vw, 40px);
+    }
+
+    .title--small{
+      font-size:clamp(24px, 3.4vw, 30px);
+    }
+
+    .subtitle{
+      font-size:15px;
+      line-height:1.85;
+      color:var(--text);
+      max-width:620px;
+      margin:0 auto;
+    }
+
+    .soft{
+      color:var(--muted);
+    }
+
+    .hero{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:34px;
+      max-width:860px;
+      margin:0 auto;
+      padding-top:28px;
+      padding-bottom:34px;
+    }
+
+    .hero-text{
+      width:165px;
+      flex:0 0 165px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+    }
+
+    .hero-letter{
+      font-family:"Patriciana","Times New Roman",serif;
+      font-size:54px;
+      line-height:1;
+      font-weight:700;
+    }
+
+    .hero-line{
+      width:72px;
+      height:1px;
+      background:var(--text);
+      margin:9px 0;
+    }
+
+    .hero-name{
+      font-family:"TildaSans-R","Inter",system-ui,sans-serif;
+      font-size:13px;
+      letter-spacing:.22em;
+      line-height:1.4;
+      margin:0;
+    }
+
+    .hero-photo{
+      flex:1 1 auto;
+      width:min(100%, 460px);
+      aspect-ratio: 4 / 5;
+      object-fit:cover;
+      display:block;
+      border-radius:8px;
+      filter:grayscale(100%);
+    }
+
+    @media (max-width: 760px){
+      .section{
+        padding:58px 18px;
+      }
+
+      .hero{
+        flex-direction:column;
+        gap:22px;
+      }
+
+      .hero-text{
+        width:auto;
+        flex:0 0 auto;
+      }
+
+      .hero-photo{
+        width:100%;
+        max-width:100%;
+      }
+    }
+
+    .block{
+      max-width:640px;
+      margin:0 auto;
+    }
+
+    .greeting{
+      font-family:"Patriciana","Times New Roman",serif;
+      font-weight:700;
+      font-size:clamp(26px, 4.2vw, 34px);
+      line-height:1.12;
+      margin:0 0 16px;
+    }
+
+    .text{
+      font-size:16px;
+      line-height:1.8;
+      margin:0;
+    }
+
+    .text + .text{
+      margin-top:12px;
+    }
+
+    .line-space{
+      height:14px;
+    }
+
+    .chip-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:center;
+      margin-top:16px;
+    }
+
+    .chip{
+      width:34px;
+      height:34px;
+      border-radius:999px;
+      border:1px solid #ffffff;
+      box-shadow:0 0 0 1px rgba(0,0,0,.08);
+    }
+
+    .confirm-actions{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      align-items:center;
+      max-width:360px;
+      margin:22px auto 0;
+    }
+
+    .btn{
+      appearance:none;
+      border:1px solid transparent;
+      border-radius:999px;
+      padding:14px 18px;
+      width:100%;
+      font:inherit;
+      font-size:15px;
+      line-height:1;
+      cursor:pointer;
+      transition:transform .15s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease;
+    }
+
+    .btn:active{
+      transform:translateY(1px);
+    }
+
+    .btn-primary{
+      background:#111;
+      color:#fff;
+      box-shadow:0 10px 24px rgba(0,0,0,.08);
+    }
+
+    .btn-secondary{
+      background:#fff;
+      color:#111;
+      border-color:var(--line);
+    }
+
+    .btn-secondary:hover{
+      background:var(--soft);
+    }
+
+    .notice{
+      margin-top:18px;
+      font-size:15px;
+      line-height:1.7;
+      color:var(--muted);
+      display:none;
+    }
+
+    .form-shell{
+      max-width:620px;
+      margin:0 auto;
+      padding-top:10px;
+    }
+
+    .form-title{
+      margin-bottom:20px;
+    }
+
+    .form-group{
+      margin-top:18px;
+    }
+
+    .form-label{
+      display:block;
+      font-size:15px;
+      line-height:1.6;
+      margin-bottom:10px;
+      color:var(--text);
+    }
+
+    .choice-list{
+      display:grid;
+      gap:10px;
+      justify-items:center;
+      margin-top:8px;
+    }
+
+    .choice{
+      width:100%;
+      max-width:420px;
+      padding:12px 14px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fff;
+      text-align:left;
+      font-size:15px;
+      line-height:1.4;
+    }
+
+    .choice input{
+      margin-right:10px;
+      transform:translateY(1px);
+    }
+
+    .text-input,
+    .text-area{
+      width:100%;
+      max-width:520px;
+      margin:0 auto;
+      display:block;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:#fff;
+      color:var(--text);
+      font:inherit;
+      font-size:15px;
+      padding:14px 16px;
+      outline:none;
+      transition:border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .text-area{
+      min-height:120px;
+      resize:vertical;
+      line-height:1.7;
+    }
+
+    .text-input:focus,
+    .text-area:focus{
+      border-color:#c9b8aa;
+      box-shadow:0 0 0 4px rgba(201,184,170,.14);
+    }
+
+    .helper{
+      margin-top:10px;
+      font-size:13px;
+      line-height:1.6;
+      color:var(--muted);
+    }
+
+    .tiny-space{
+      height:10px;
+    }
+
+    .schedule-wrap{
+      max-width:860px;
+      margin:0 auto;
+    }
+
+    .schedule-title{
+      font-family:"Patriciana","Times New Roman",serif;
+      font-weight:700;
+      font-size:clamp(46px, 8vw, 78px);
+      line-height:.92;
+      margin:0;
+    }
+
+    .schedule-date{
+      margin-top:18px;
+      font-size:15px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+
+    .schedule-list{
+      margin-top:42px;
+      display:grid;
+      gap:30px;
+    }
+
+    .schedule-item{
+      display:grid;
+      grid-template-columns:86px 1fr;
+      gap:28px;
+      align-items:start;
+      text-align:left;
+    }
+
+    .schedule-time{
+      font-family:"TildaSans-R","Inter",system-ui,sans-serif;
+      font-size:18px;
+      line-height:1.2;
+      color:var(--text);
+      padding-top:3px;
+      font-weight:400;
+    }
+
+    .schedule-content{
+      max-width:620px;
+    }
+
+    .schedule-event{
+      font-size:18px;
+      line-height:1.45;
+      color:var(--text);
+      font-weight:700;
+    }
+
+    .schedule-address{
+      margin-top:7px;
+      font-size:15px;
+      line-height:1.6;
+      color:var(--muted);
+    }
+
+    .schedule-note{
+      margin-top:14px;
+      font-size:14px;
+      line-height:1.7;
+      color:#6f6055;
+      max-width:520px;
+    }
+
+    @media (max-width: 680px){
+      .schedule-item{
+        grid-template-columns:72px 1fr;
+        gap:18px;
+      }
+
+      .schedule-time{
+        font-size:17px;
+      }
+
+      .schedule-event{
+        font-size:17px;
+      }
+    }
+
+    .maps-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:18px;
+      max-width:920px;
+      margin:32px auto 0;
+    }
+
+    .map-card{
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:14px;
+      background:#fff;
+      overflow:hidden;
+    }
+
+    .map-caption{
+      margin:0 0 12px;
+      font-size:15px;
+      line-height:1.65;
+      color:var(--text);
+      text-align:center;
+    }
+
+    .map-frame{
+      width:100%;
+      height:320px;
+      border:0;
+      border-radius:16px;
+      display:block;
+      background:var(--soft);
+    }
+
+    @media (max-width: 760px){
+      .maps-grid{
+        grid-template-columns:1fr;
+      }
+
+      .map-frame{
+        height:280px;
+      }
+    }
+
+    .login-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(255,255,255,.96);
+      backdrop-filter:blur(6px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+      padding:20px;
+    }
+
+    .login-card{
+      width:min(100%, 360px);
+      text-align:center;
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:24px 20px 20px;
+      background:#fff;
+      box-shadow:0 18px 40px rgba(0,0,0,.06);
+    }
+
+    .login-title{
+      margin:0 0 16px;
+      font-size:15px;
+      line-height:1.8;
+      color:var(--text);
+    }
+
+    .login-card .text-input{
+      max-width:100%;
+      margin-top:10px;
+      text-align:left;
+    }
+
+    .login-error{
+      min-height:22px;
+      margin-top:12px;
+      color:#b04f4f;
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .thanks{
+      max-width:620px;
+      margin:18px auto 0;
+      display:none;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.8;
+    }
+
+    .hr{
+      width:70px;
+      height:1px;
+      background:var(--line);
+      margin:18px auto 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-card">
+      <p class="login-title">Доброго времени!<br>Введите, пожалуйста, Ваши имя (полное) и фамилию</p>
+      <input class="text-input" id="firstName" type="text" placeholder="Имя" autocomplete="given-name">
+      <input class="text-input" id="lastName" type="text" placeholder="Фамилия" autocomplete="family-name">
+      <button class="btn btn-primary" id="loginButton" type="button">Войти</button>
+      <div class="login-error" id="loginError"></div>
+    </div>
+  </div>
+
+  <div class="page" id="page">
+    <section class="section section-narrow visible" id="heroSection">
+      <div class="hero">
+        <div class="hero-text" aria-label="Дарья и Артем">
+          <div class="hero-letter">Д</div>
+          <div class="hero-line"></div>
+          <p class="hero-name">Дарья</p>
+          <p class="hero-name">&</p>
+          <p class="hero-name">Артем</p>
+          <div class="hero-line"></div>
+          <div class="hero-letter">А</div>
+        </div>
+        <img class="hero-photo" src="./photo.jpg" alt="Наша чёрно-белая фотография" loading="eager" decoding="async">
+      </div>
+    </section>
+
+    <section class="section section-narrow">
+      <div class="block">
+        <h2 class="greeting title title--small" id="greeting"></h2>
+        <p class="text">
+          Мы рады сообщить Вам, что 25.07.2026 состоится самое главное торжество в нашей жизни – день нашей свадьбы!
+          Приглашаем Вас разделить с нами радость этого незабываемого дня.
+        </p>
+        <div class="line-space"></div>
+        <p class="text"><strong>25.07.2026 в 15:10</strong></p>
+      </div>
+    </section>
+
+    <section class="section section-narrow">
+      <div class="block">
+        <h2 class="title title--small">МЕНЮ</h2>
+        <p class="text">
+          Меню разнообразно, поэтому сообщите нам заранее, если у Вас есть какие-либо предпочтения или диетические ограничения.
+          После подтверждения Вы сможете пройти опрос о своих вкусовых предпочтениях и напитках.
+        </p>
+      </div>
+    </section>
+
+    <section class="section section-narrow">
+      <div class="block">
+        <h2 class="title title--small">ПОЖЕЛАНИЯ ПО ПОДАРКАМ</h2>
+        <p class="text">Ваше присутствие в день нашей свадьбы – самый значимый подарок для нас!</p>
+        <p class="text soft">Мы понимаем, что дарить цветы на свадьбу – это традиция, но мы не сможем насладиться их красотой в полной мере, так как у нас живет кошечка, которая любит их грызть.</p>
+        <p class="text soft">Будем рады любой другой альтернативе.</p>
+      </div>
+    </section>
+
+    <section class="section section-narrow">
+      <div class="block">
+        <h2 class="title title--small">ПРИМЕЧАНИЕ</h2>
+        <p class="text">Будем благодарны, если Вы воздержитесь от криков «Горько» на празднике, ведь поцелуй – это знак выражения чувств, он не может быть по заказу.</p>
+      </div>
+    </section>
+
+    <section class="section section-narrow">
+      <div class="block">
+        <h2 class="title title--small">ПОДТВЕРЖДЕНИЕ</h2>
+        <p class="text">Пожалуйста, подтвердите свое присутствие до 01.07.2026</p>
+
+        <div class="confirm-actions">
+          <button class="btn btn-primary" type="button" id="confirmBtn">Подтверждаю</button>
+          <button class="btn btn-secondary" type="button" id="declineBtn">Не смогу прийти</button>
+        </div>
+
+        <div class="notice" id="declineMessage">Нам очень жаль :(. Надеемся, Вы поменяете свое решение.</div>
+      </div>
+    </section>
+
+    <section class="section section-narrow" id="surveySection" style="display:none;">
+      <div class="form-shell">
+        <h2 class="title title--small form-title">Пожалуйста, ответьте на вопросы, которые для Вас подготовили Жених и Невеста:</h2>
+
+        <div class="form-group">
+          <label class="form-label">Есть ли у Вас особые предпочтения по еде:</label>
+          <div class="choice-list">
+            <label class="choice"><input type="radio" name="food" value="нет">нет</label>
+            <label class="choice"><input type="radio" name="food" value="не ем мясо">не ем мясо</label>
+            <label class="choice"><input type="radio" name="food" value="не ем рыбу">не ем рыбу</label>
+          </div>
+          <div class="tiny-space"></div>
+          <input class="text-input" id="allergyInput" type="text" placeholder="Если есть аллергия — укажите на что">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Какой алкоголь вы предпочитаете: <span class="soft">(можно несколько вариантов ответа)</span></label>
+          <div class="choice-list">
+            <label class="choice"><input type="checkbox" value="Красное вино" name="alcohol">Красное вино</label>
+            <label class="choice"><input type="checkbox" value="Белое вино" name="alcohol">Белое вино</label>
+            <label class="choice"><input type="checkbox" value="Шампанское" name="alcohol">Шампанское</label>
+            <label class="choice"><input type="checkbox" value="Виски" name="alcohol">Виски</label>
+            <label class="choice"><input type="checkbox" value="Коньяк" name="alcohol">Коньяк</label>
+            <label class="choice"><input type="checkbox" value="Водка" name="alcohol">Водка</label>
+            <label class="choice"><input type="checkbox" value="Не буду пить алкоголь" name="alcohol">Не буду пить алкоголь</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <h2 class="title title--small" style="margin-top:10px;">Добавить сообщение для жениха и невесты:</h2>
+          <textarea class="text-area" id="messageInput" placeholder="Введите Ваше сообщение"></textarea>
+        </div>
+
+        <div style="margin-top:30px;">
+          <button class="btn btn-primary" type="button" id="surveySendBtn">Отправить</button>
+        </div>
+
+        <div class="thanks" id="thanksMessage">Спасибо! Ваш ответ сохранён.</div>
+      </div>
+    </section>
+
+    <section class="section section-narrow">
+      <div class="block">
+        <h2 style="font-family:Betmo; font-size:42px; font-weight:400; margin:0;">
+          Ждем Вас!
+        </h2>
+      </div>
+    </section>
+
+    <section class="section section-narrow">
+      <div class="block">
+        <h2 class="title title--small">ДРЕСС-КОД</h2>
+        <p class="text">Будем благодарны, если при выборе нарядов на наше торжество Вы придержитесь коричнево-бежевой палитры, но заставлять никого не будем :)</p>
+
+        <div class="chip-row" aria-label="Палитра дресс-кода">
+          <div class="chip" style="background:#402D25"></div>
+          <div class="chip" style="background:#735749"></div>
+          <div class="chip" style="background:#A57F6A"></div>
+          <div class="chip" style="background:#C09F8E"></div>
+          <div class="chip" style="background:#D9BFB2"></div>
+        </div>
+
+        <div style="margin-top:25px;">
+          <img src="./photo2.jpg" alt="Примеры образов" style="width:100%; max-width:420px; border-radius:12px; display:block; margin:0 auto;" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-narrow">
+      <div class="schedule-wrap">
+        <h2 class="schedule-title">Свадебное<br>расписание</h2>
+        <div class="schedule-date">25.07.2026</div>
+
+        <div class="schedule-list">
+          <div class="schedule-item">
+            <div class="schedule-time">15:10</div>
+            <div class="schedule-content">
+              <div class="schedule-event">Торжественная регистрация брака</div>
+              <div class="schedule-address">Институтский проспект, д. 8</div>
+              <div class="schedule-note">Наша регистрация пройдет в залах ЗАГСа Выборгского района, приглашаем всех разделить с нами такой торжественный момент</div>
+            </div>
+          </div>
+
+          <div class="schedule-item">
+            <div class="schedule-time">16:45</div>
+            <div class="schedule-content">
+              <div class="schedule-event">Фуршет</div>
+              <div class="schedule-address">Никольская ул., д. 9</div>
+              <div class="schedule-note">Время пролетит незаметно за фуршетом и общением с другими гостями</div>
+            </div>
+          </div>
+
+          <div class="schedule-item">
+            <div class="schedule-time">17:00</div>
+            <div class="schedule-content">
+              <div class="schedule-event">Праздничный банкет</div>
+              <div class="schedule-address">Никольская ул., д. 9</div>
+              <div class="schedule-note">Здесь пройдет наш праздничный банкет</div>
+            </div>
+          </div>
+
+          <div class="schedule-item">
+            <div class="schedule-time">22:00</div>
+            <div class="schedule-content">
+              <div class="schedule-event">Окончание праздничного дня</div>
+              <div class="schedule-note">Даже такой день может когда-то подойти к концу.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-narrow">
+      <div class="block">
+        <h2 class="title title--small">КАРТЫ</h2>
+
+        <div class="maps-grid">
+          <div class="map-card">
+            <p class="map-caption">ЗАГС Выборгского района. Институтский проспект, д. 8</p>
+            <iframe
+              class="map-frame"
+              src="https://yandex.ru/map-widget/v1/?um=constructor%3Ac6ce9286c1e2395d6525f11cac501889b746d39e254b9c148dc90eee891b22d9&amp;source=constructor"
+              width="100%"
+              height="400"
+              frameborder="0"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              title="Карта ЗАГСа Выборгского района"></iframe>
+          </div>
+
+          <div class="map-card">
+            <p class="map-caption">Sunpark Grill Bar. Никольская ул., 9</p>
+            <iframe
+              class="map-frame"
+              src="https://yandex.ru/map-widget/v1/?um=constructor%3A020c99944597c5b256cf831cbb1a8f09f6bf029750b36b2a8dc4ffcd9384fc88&amp;source=constructor"
+              width="100%"
+              height="400"
+              frameborder="0"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              title="Карта Sunpark Grill Bar"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbypUjEHqn-cI1mNwRZdfw4P5Ce5ouPzthRrvqG30yIznQBXqmHMA00kXc-OJNuca6cXQg/exec";
+
+    const guests = [
+      { key: "анна в", greeting: "Дорогие Николай и Анна!" },
+      { key: "николай в", greeting: "Дорогие Николай и Анна!" },
+      { key: "алексей в", greeting: "Дорогой Алексей!" },
+      { key: "мария в", greeting: "Дорогая Мария!" },
+      { key: "наталия б", greeting: "Уважаемые Наталия Владимировна и Денис Владимирович!" },
+      { key: "денис с", greeting: "Уважаемые Наталия Владимировна и Денис Владимирович!" },
+      { key: "юрий б", greeting: "Уважаемый Юрий Александрович!" },
+      { key: "юлия с", greeting: "Дорогие Юлия и Роберт!" },
+      { key: "роберт с", greeting: "Дорогие Юлия и Роберт!" },
+      { key: "кирилл щ", greeting: "Дорогой Кирилл!" },
+      { key: "егор л", greeting: "Дорогой Егор!" },
+      { key: "артем бо", greeting: "Дорогой Артем!" },
+      { key: "александр п", greeting: "Дорогой Александр!" },
+      { key: "даниил е", greeting: "Дорогой Даниил!" },
+      { key: "иван с", greeting: "Дорогой Иван!" },
+      { key: "владимир к", greeting: "Уважаемый Владимир Викторович!" },
+      { key: "елена с", greeting: "Уважаемые Елена Валентиновна и Валерий Владимирович!" },
+      { key: "валерий с", greeting: "Уважаемые Елена Валентиновна и Валерий Владимирович!" },
+      { key: "марина с", greeting: "Дорогие Сережа и Марина Смирновы!" },
+      { key: "сергей с", greeting: "Дорогие Сережа и Марина Смирновы!" },
+      { key: "михаил с", greeting: "Уважаемый Михаил Владимирович!" },
+      { key: "артем с", greeting: "Уважаемый Артем!" },
+      { key: "артём с", greeting: "Уважаемый Артём!" },
+      { key: "валерия с", greeting: "Уважаемые Валерия и Александр!" },
+      { key: "александр с", greeting: "Уважаемые Валерия и Александр!" },
+      { key: "кристина б", greeting: "Дорогая Кристина!" },
+      { key: "дарья ш", greeting: "Дорогая Дарья!" },
+      { key: "полина к", greeting: "Дорогая Полина!" },
+      { key: "ульяна н", greeting: "Дорогая Ульяна!" },
+      { key: "маргарита к", greeting: "Дорогая Маргарита!" },
+      { key: "александр к", greeting: "Дорогие Александр и Ксения!" },
+      { key: "ксения к", greeting: "Дорогие Александр и Ксения!" },
+      { key: "татьяна с", greeting: "Уважаемые Татьяна и Александр!" },
+      { key: "александр с", greeting: "Уважаемые Татьяна и Александр!" },
+      { key: "евгений т", greeting: "Уважаемые Евгений, Светлана и Анастасия!" },
+      { key: "светлана т", greeting: "Уважаемые Евгений, Светлана и Анастасия!" },
+      { key: "анастасия т", greeting: "Уважаемые Евгений, Светлана и Анастасия!" }
+    ];
+
+    const state = {
+      firstName: "",
+      lastName: "",
+      greeting: "",
+      attending: null
+    };
+
+    const loginOverlay = document.getElementById("loginOverlay");
+    const loginError = document.getElementById("loginError");
+    const greetingEl = document.getElementById("greeting");
+    const confirmBtn = document.getElementById("confirmBtn");
+    const declineBtn = document.getElementById("declineBtn");
+    const declineMessage = document.getElementById("declineMessage");
+    const surveySection = document.getElementById("surveySection");
+    const surveySendBtn = document.getElementById("surveySendBtn");
+    const thanksMessage = document.getElementById("thanksMessage");
+
+    function normalize(value){
+      return String(value || "")
+        .trim()
+        .toLowerCase()
+        .replaceAll("ё", "е")
+        .replace(/\s+/g, " ");
+    }
+
+    function revealVisibleSections(){
+      const sections = document.querySelectorAll(".section");
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 90) {
+          section.classList.add("visible");
+        }
+      });
+    }
+
+    function loginUser(){
+      const first = normalize(document.getElementById("firstName").value);
+      const last = normalize(document.getElementById("lastName").value);
+      const input = `${first} ${last}`.trim();
+
+      const found = guests.find((guest) => input.startsWith(normalize(guest.key)));
+
+      if (!found) {
+        loginError.textContent = "Просим прощения. Кажется, человека с таким именем нет в списках. Проверьте корректность вводимых имени и фамилии";
+        return;
+      }
+
+      state.firstName = first;
+      state.lastName = last;
+      state.greeting = found.greeting;
+      greetingEl.textContent = found.greeting;
+      loginOverlay.style.display = "none";
+      setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 120);
+      requestAnimationFrame(revealVisibleSections);
+    }
+
+    function showAttendingFlow(){
+      state.attending = "Да";
+      declineMessage.style.display = "none";
+      surveySection.style.display = "block";
+      surveySection.classList.add("visible");
+      surveySection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function showDeclineMessage(){
+      state.attending = "Нет";
+      surveySection.style.display = "none";
+      declineMessage.style.display = "block";
+      declineMessage.textContent = "Нам очень жаль :(. Надеемся, Вы поменяете свое решение.";
+    }
+
+    function getSelectedFood(){
+      const selected = document.querySelector('input[name="food"]:checked');
+      return selected ? selected.value : "";
+    }
+
+    function getSelectedAlcohol(){
+      return Array.from(document.querySelectorAll('input[name="alcohol"]:checked'))
+        .map((input) => input.value)
+        .join(", ");
+    }
+
+    async function sendResponse(){
+      const payload = {
+        firstName: state.firstName,
+        lastName: state.lastName,
+        attending: state.attending || "Да",
+        food: getSelectedFood(),
+        allergy: document.getElementById("allergyInput").value.trim(),
+        alcohol: getSelectedAlcohol(),
+        message: document.getElementById("messageInput").value.trim()
+      };
+
+      try{
+        await fetch(API_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        thanksMessage.style.display = "block";
+        surveySendBtn.disabled = true;
+        surveySendBtn.textContent = "Отправлено";
+      }catch(err){
+        alert("Не удалось отправить ответ. Проверьте подключение Google Apps Script.");
+      }
+    }
+
+    confirmBtn.addEventListener("click", showAttendingFlow);
+    declineBtn.addEventListener("click", showDeclineMessage);
+    surveySendBtn.addEventListener("click", sendResponse);
+
+    document.getElementById("loginButton").addEventListener("click", loginUser);
+    document.getElementById("firstName").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") loginUser();
+    });
+    document.getElementById("lastName").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") loginUser();
+    });
+
+    window.addEventListener("scroll", revealVisibleSections);
+    window.addEventListener("load", revealVisibleSections);
+
+    requestAnimationFrame(revealVisibleSections);
+  </script>
+</body>
+</html>
