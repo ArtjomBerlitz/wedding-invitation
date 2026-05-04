@@ -8,7 +8,7 @@
   <style>
     @font-face {
       font-family: "Patriciana";
-      src: url("./fonts/Patriciana.woff2") format("woff2");
+      src: url("./fonts/patriciana.woff2") format("woff2");
       font-display: swap;
     }
 
@@ -113,24 +113,23 @@
     }
 
     .hero{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:34px;
-      max-width:860px;
-      margin:0 auto;
-      padding-top:28px;
-      padding-bottom:34px;
-    }
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  max-width:520px;
+  margin:auto;
+}
 
     .hero-text{
-      width:165px;
+      width:120px;
       flex:0 0 165px;
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
       text-align:center;
+      flex-shrink:0;
     }
 
     .hero-letter{
@@ -157,7 +156,8 @@
 
     .hero-photo{
       flex:1 1 auto;
-      width:min(100%, 460px);
+      width:52%;
+      max-width:240px;
       aspect-ratio: 4 / 5;
       object-fit:cover;
       display:block;
@@ -166,25 +166,51 @@
     }
 
     @media (max-width: 760px){
-      .section{
-        padding:58px 18px;
-      }
+  .section{
+    padding:68px 18px;
+  }
 
-      .hero{
-        flex-direction:column;
-        gap:22px;
-      }
+  .hero{
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
 
-      .hero-text{
-        width:auto;
-        flex:0 0 auto;
-      }
+  .hero-text{
+    width: clamp(92px, 26vw, 126px);
+    flex: 0 0 clamp(92px, 26vw, 126px);
+  }
 
-      .hero-photo{
-        width:100%;
-        max-width:100%;
-      }
-    }
+  .hero-letter{
+    font-size: clamp(38px, 10vw, 48px);
+  }
+
+  .hero-name{
+    font-size: 11px;
+    letter-spacing: .18em;
+  }
+
+  .hero-photo{
+    width: clamp(170px, 56vw, 320px);
+    max-width: none;
+  }
+}
+
+@media (max-width: 380px){
+  .hero{
+    gap: 10px;
+  }
+
+  .hero-text{
+    width: 86px;
+    flex-basis: 86px;
+  }
+
+  .hero-photo{
+    width: calc(100% - 96px);
+  }
+}
 
     .block{
       max-width:640px;
@@ -576,7 +602,7 @@
           <div class="hero-line"></div>
           <div class="hero-letter">А</div>
         </div>
-        <img class="hero-photo" src="./photo.JPG" alt="Наша чёрно-белая фотография" loading="eager" decoding="async">
+        <img class="hero-photo" src="./photo.jpg" alt="Наша чёрно-белая фотография" loading="eager" decoding="async">
       </div>
     </section>
 
@@ -801,8 +827,8 @@
       { key: "владимир к", greeting: "Уважаемый Владимир Викторович!" },
       { key: "елена с", greeting: "Уважаемые Елена Валентиновна и Валерий Владимирович!" },
       { key: "валерий с", greeting: "Уважаемые Елена Валентиновна и Валерий Владимирович!" },
-      { key: "марина с", greeting: "Дорогие Сережа и Марина Смирновы!" },
-      { key: "сергей с", greeting: "Дорогие Сережа и Марина Смирновы!" },
+      { key: "марина с", greeting: "Дорогие Сергей и Марина Смирновы!" },
+      { key: "сергей с", greeting: "Дорогие Сергей и Марина Смирновы!" },
       { key: "михаил с", greeting: "Уважаемый Михаил Владимирович!" },
       { key: "артем с", greeting: "Уважаемый Артем!" },
       { key: "артём с", greeting: "Уважаемый Артём!" },
@@ -838,6 +864,7 @@
     const surveySection = document.getElementById("surveySection");
     const surveySendBtn = document.getElementById("surveySendBtn");
     const thanksMessage = document.getElementById("thanksMessage");
+    const messageSection = document.getElementById("messageSection");
 
     function normalize(value){
       return String(value || "")
@@ -886,12 +913,22 @@
       surveySection.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    function showDeclineMessage(){
-      state.attending = "Нет";
-      surveySection.style.display = "none";
-      declineMessage.style.display = "block";
-      declineMessage.textContent = "Нам очень жаль :(. Надеемся, Вы поменяете свое решение.";
-    }
+    async function showDeclineMessage(){
+  state.attending = "Нет";
+
+  if (surveySection) {
+    surveySection.style.display = "none";
+  }
+
+  if (messageSection) {
+    messageSection.style.display = "none";
+  }
+
+  declineMessage.style.display = "block";
+  declineMessage.textContent = "Нам очень жаль :(. Надеемся, Вы поменяете свое решение.";
+
+  await sendResponse();
+}
 
     function getSelectedFood(){
       const selected = document.querySelector('input[name="food"]:checked');
